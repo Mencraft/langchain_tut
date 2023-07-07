@@ -1,13 +1,16 @@
 import { OpenAI } from "langchain/llms/openai";
-
+import { PromptTemplate } from "langchain/prompts";
 import * as dotenv from "dotenv";
 dotenv.config()
 
 export const run = async () => {
-    const model = new OpenAI({temperature: 0.9});
+  //Create the template. The template is actually a "parameterized prompt". A "parameterized prompt" is a prompt in which the input parameter names are used and the parameter values are supplied from external input 
+  const template = "What is a good name for a company that makes {product}?";
 
-    const res = await model.call("What would be a good company name a company that makes colorful socks? ")
-
+  //Instantiate "PromptTemplate" passing the prompt template string initialized above and a list of variable names the final prompt template will expect
+  const prompt = new PromptTemplate({ template, inputVariables: ["product"] });
+//Create a new prompt from the combination of the template and input variables. Pass the value for the variable name that was sent in the "inputVariables" list passed to "PromptTemplate" initialization call
+const res = await prompt.format({ product: "colorful socks" });
     console.log({res});
     
 };
